@@ -3,11 +3,10 @@ public class GuiLayout {
 
 	public static void main(String[] args) 
 	{
-		System.out.println("testing by adding a String");
-		System.out.println("slowly getting used to git");
-		System.out.println("trying out if my key worked");
-		System.out.println("I cri err time, plz halp troy sprrreaddin cheeks too far");
-		System.out.println("Troy's gunna look at this n be like, spreading cheeks? tf?");
+		System.out.println("Eric Leon(eleon23), Alexis Urquiz(aurqui7)");
+		
+		System.out.println("Jicub(jglebo2)");
+		
 	}
 
 }
