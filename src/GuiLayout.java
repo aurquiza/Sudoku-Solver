@@ -28,7 +28,7 @@ public class GuiLayout extends JFrame
 		addMenus();
 
 
-		setSize(300,300);
+		setSize(500,500);
 		setVisible(true);
 
 
@@ -37,7 +37,9 @@ public class GuiLayout extends JFrame
 	private void addMenus()
 	{
 		bar.add(mainMenu.getFileMenu());
-		
+		bar.add(mainMenu.getHelpMenu());
+		bar.add(mainMenu.getHintMenu());
+
 	}
 
 
