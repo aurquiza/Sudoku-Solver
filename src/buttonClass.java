@@ -2,16 +2,23 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class buttonClass{
-
-	
+public class buttonClass extends JButton{
 
 
-
-
+	public buttonClass()
+	{
 
 
 
+	}
 
-	
+
+
+
+
+
+
+
+
+
 }

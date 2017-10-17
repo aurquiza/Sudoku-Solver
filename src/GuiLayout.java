@@ -2,10 +2,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class GuiLayout extends JFrame {
+public class GuiLayout extends JFrame 
+{
 
 
 	private Container mainContainer;
+	private buttonClass mainGrid = new buttonClass();
+	private MenuClass mainMenu = new MenuClass();
 
 	public GuiLayout(){
 
@@ -13,6 +16,7 @@ public class GuiLayout extends JFrame {
 		mainContainer = getContentPane();
 		mainContainer.setLayout(new BorderLayout());
 
+		mainMenu.createMenu();
 
 
 
