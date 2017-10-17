@@ -4,30 +4,40 @@ import javax.swing.*;
 
 public class MenuClass extends JFrame{
 
+	JMenu fileMenu;
+	JMenuBar bar;
 
 	public MenuClass()
 	{
-
-
+		createMenu();
 		
-	}
+    }
 
-	public void createMenu()
-	{
+    public void createMenu()
+    {
 
-		JMenuBar bar = new JMenuBar();
+
+		bar = new JMenuBar();
 		setJMenuBar(bar);
 
-		JMenu fileMenu = new JMenu( "File" );
+		fileMenu = new JMenu( "File" );
         fileMenu.setMnemonic( 'F' );
 
         bar.add(fileMenu);
 
 
-     //  setSize( 500, 200 );
-      setVisible( true );
 
-	}
+
+    }
+
+    public JMenu getFileMenu()
+    {
+    	return fileMenu;
+    }
+    public JMenuBar getBar()
+    {
+    	return bar;
+    }
 
 
 

@@ -8,6 +8,7 @@ public class GuiLayout extends JFrame
 
 	private Container mainContainer;
 	private buttonClass mainGrid = new buttonClass();
+
 	private MenuClass mainMenu = new MenuClass();
 
 	public GuiLayout(){
@@ -15,9 +16,9 @@ public class GuiLayout extends JFrame
 		super("CS 342 Project 3");
 		mainContainer = getContentPane();
 		mainContainer.setLayout(new BorderLayout());
-
-		mainMenu.createMenu();
-
+		mainContainer.add(mainMenu.getBar());
+		
+		
 
 
 		setSize(500,500);
