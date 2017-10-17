@@ -4,28 +4,42 @@ import javax.swing.*;
 
 public class GuiLayout extends JFrame 
 {
-
-
 	private Container mainContainer;
-	private buttonClass mainGrid = new buttonClass();
+	private buttonClass mainGrid = new buttonClass("This is a button");
 
 	private MenuClass mainMenu = new MenuClass();
+	private GridLayout grid;
+
+	private JMenuBar bar;
 
 	public GuiLayout(){
 
 		super("CS 342 Project 3");
+		grid = new GridLayout(1,1);
+
 		mainContainer = getContentPane();
 		mainContainer.setLayout(new BorderLayout());
-		mainContainer.add(mainMenu.getBar());
+		mainContainer.setLayout(grid);
+
+		mainContainer.add(mainGrid);
 		
-		
+		bar = new JMenuBar();
+		setJMenuBar(bar);
+		addMenus();
 
 
-		setSize(500,500);
+		setSize(300,300);
 		setVisible(true);
 
 
 	}
+
+	private void addMenus()
+	{
+		bar.add(mainMenu.getFileMenu());
+		
+	}
+
 
 
 	public static void main(String[] args) 

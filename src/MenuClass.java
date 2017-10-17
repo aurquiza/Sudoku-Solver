@@ -5,7 +5,8 @@ import javax.swing.*;
 public class MenuClass extends JFrame{
 
 	JMenu fileMenu;
-	JMenuBar bar;
+	JMenu helpMenu;
+	JMenu hintMenu;
 
 	public MenuClass()
 	{
@@ -16,15 +17,35 @@ public class MenuClass extends JFrame{
     public void createMenu()
     {
 
-
-		bar = new JMenuBar();
-		setJMenuBar(bar);
-
 		fileMenu = new JMenu( "File" );
         fileMenu.setMnemonic( 'F' );
+        fileMenuItems();
 
-        bar.add(fileMenu);
+    }
 
+    public void fileMenuItems(){
+
+
+
+        JMenuItem loadPuzzle = new JMenuItem( "Load Puzzle" );
+      	loadPuzzle.setMnemonic( 'A' );
+        fileMenu.add( loadPuzzle );
+
+        loadPuzzle.addActionListener(
+
+         new ActionListener() {  // anonymous inner class
+
+            // display message dialog when user selects About...
+            public void actionPerformed( ActionEvent event )
+            {
+               JOptionPane.showMessageDialog( MenuClass.this,
+                  "This is for loading in a puzzle",
+                  "Load Puzzle", JOptionPane.PLAIN_MESSAGE );
+            }
+
+         }  // end anonymous inner class
+
+      ); // end call to addActionListener
 
 
 
@@ -34,9 +55,14 @@ public class MenuClass extends JFrame{
     {
     	return fileMenu;
     }
-    public JMenuBar getBar()
+
+    public JMenu getHelpMenu()
     {
-    	return bar;
+    	return helpMenu;
+    }
+
+    public JMenu getHintMenu(){
+    	return hintMenu;
     }
 
 

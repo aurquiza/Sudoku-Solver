@@ -5,10 +5,9 @@ import javax.swing.*;
 public class buttonClass extends JButton{
 
 
-	public buttonClass()
+	public buttonClass(String s)
 	{
-
-
+		super(s);
 
 	}
 
