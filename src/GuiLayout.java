@@ -2,14 +2,38 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class GuiLayout {
+public class GuiLayout extends JFrame {
+
+
+	private Container mainContainer;
+
+	public GuiLayout(){
+
+		super("CS 342 Project 3");
+		mainContainer = getContentPane();
+		mainContainer.setLayout(new BorderLayout());
+
+
+
+
+		setSize(500,500);
+		setVisible(true);
+
+
+	}
+
 
 	public static void main(String[] args) 
 	{
-		System.out.println("Eric Leon(eleon23), Alexis Urquiz(aurqui7)");
-		System.out.println("hi");
-		
-		int x = 0;
+
+		GuiLayout app = new GuiLayout();
+
+		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+
+
+
 		
 	}
 
