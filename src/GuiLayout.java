@@ -2,14 +2,57 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class GuiLayout {
+public class GuiLayout extends JFrame 
+{
+	private Container mainContainer;
+	private buttonClass mainGrid = new buttonClass("This is a button");
+
+	private MenuClass mainMenu = new MenuClass();
+	private GridLayout grid;
+
+	private JMenuBar bar;
+
+	public GuiLayout(){
+
+		super("CS 342 Project 3");
+		grid = new GridLayout(1,1);
+
+		mainContainer = getContentPane();
+		mainContainer.setLayout(new BorderLayout());
+		mainContainer.setLayout(grid);
+
+		mainContainer.add(mainGrid);
+		
+		bar = new JMenuBar();
+		setJMenuBar(bar);
+		addMenus();
+
+
+		setSize(300,300);
+		setVisible(true);
+
+
+	}
+
+	private void addMenus()
+	{
+		bar.add(mainMenu.getFileMenu());
+		
+	}
+
+
 
 	public static void main(String[] args) 
 	{
-		System.out.println("Eric Leon(eleon23), Alexis Urquiz(aurqui7)");
-		System.out.println("hi");
-		System.out.println("Jicub(jglebo2)");
-		int x = 0;
+
+		GuiLayout app = new GuiLayout();
+
+		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+
+
+
 		
 	}
 
