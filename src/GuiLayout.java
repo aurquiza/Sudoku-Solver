@@ -5,7 +5,7 @@ import javax.swing.*;
 public class GuiLayout extends JFrame 
 {
 	private Container mainContainer;
-	private buttonClass mainGrid = new buttonClass("This is a button");
+	private buttonClass buttons;
 
 	private MenuClass mainMenu = new MenuClass();
 	private GridLayout grid;
@@ -21,7 +21,7 @@ public class GuiLayout extends JFrame
 		mainContainer.setLayout(new BorderLayout());
 		mainContainer.setLayout(grid);
 
-		mainContainer.add(mainGrid);
+		mainContainer.add(buttons);
 		
 		bar = new JMenuBar();
 		setJMenuBar(bar);
@@ -32,6 +32,10 @@ public class GuiLayout extends JFrame
 		setVisible(true);
 
 
+	}
+
+	public void createButtons(){
+		
 	}
 
 	private void addMenus()
