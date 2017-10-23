@@ -1,4 +1,17 @@
+/*
+	CS 342 Programming Project 3: Sudoku-Solver
 
+	Name: Alexis Urquiza, Eric Leon, Jakub Glebocki
+	NetID: aurqui7, eleon23, jglebo2
+	
+	- This program is a gui simulation of the game Sudoku, where the user must fill in numbers for each cell in a subgrid
+ 	  in an order where each subgrid contains one single unique number in that column, row and subgrid.
+
+ 	- The GuiLayout class consists of the code to initialize the gui as well as the main static method.
+
+ 	- The user will play sudoku and be given numerous options and info such as inputing their own puzzle or saving a current one onto a text file
+
+*/
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,42 +25,67 @@ import java.util.List;
 
 public class GuiLayout extends JFrame 
 {
+
+	// instance variables to help initialize all necessary aspects of the gui
 	private Container mainContainer;
-	private MenuClass mainMenu = new MenuClass();
+	private MenuClass mainMenu;
 	private Grid grid;
-	
-	SubGrid n = new SubGrid(new GridLayout(0,1), false, 0, 10);
 	private JMenuBar bar;
-	List<String> fullBoard = new ArrayList<String>();
+	private List<String> fullBoard = new ArrayList<String>();
+
+	private JPanel sudokuGrid; 
+	private JPanel masterPanel;
+	private JPanel inputButtons;
 
 	public GuiLayout(List<String> input)
 	{
-
 		super("CS 342 Sudoku-Solver");
-		
-		grid = new Grid(3,5,7,7,9);
+		//create new grid that will create 9 subgrids and the sidebar
+		grid = new Grid(3,3,7,7,9);
+		//create menus that will hold the different options the user can execute
+		mainMenu = new MenuClass(grid);
 
+		//create the master panel as well as the sub-panels that
+		//will added to the master panel
+		masterPanel = new JPanel(new BorderLayout());
+		sudokuGrid = new JPanel(grid);
+		inputButtons = new JPanel(new GridLayout());
+		inputButtons.add(grid.getSideBar());
+
+		// add sub-panels to the master panel
+		masterPanel.add(sudokuGrid, BorderLayout.WEST);
+		masterPanel.add(inputButtons, BorderLayout.EAST);
+
+		// have the container hold information about what is on the content pane
+		// as well as add the master panel to the content pane
 		mainContainer = getContentPane();
-		//mainContainer.setLayout(new BorderLayout());
-		mainContainer.setLayout(grid);
-		fullBoard  = input;
-		printInputList();
+		mainContainer.add(masterPanel);
 		initSubGrids();
 		
+		// create the menu bar and add the required menus to it
 		bar = new JMenuBar();
 		setJMenuBar(bar);
 		addMenus();
+
+		// store input file into an arraylist 
+		fullBoard  = input;
+		printInputList();
 		
-		setSize(500,500);
+		// set the size and visibility
+		setSize(770,600);
 		setVisible(true);
 
 	}
 
-	public void printInputList(){
-		for(int i = 0; i < fullBoard.size(); i++){
-			System.out.println(fullBoard.get(i));
-		}
+	// print array list to verify if input was stored
+	public void printInputList()
+	{
+		if( fullBoard != null)
+			for(int i = 0; i < fullBoard.size(); i++)
+				System.out.println(fullBoard.get(i));
 	}
+
+	// add menus to the menu bar
 	private void addMenus()
 	{
 		bar.add(mainMenu.getFileMenu());
@@ -55,59 +93,71 @@ public class GuiLayout extends JFrame
 		bar.add(mainMenu.getHintMenu());
 	}
 
+	// add subgrids created by calling the Grid class
 	public void initSubGrids()
 	{
-		SubGrid sGrids[] = grid.getSubGrids();
+		// add each subgrid to the contentpane
+		for(int i = 0; i < grid.getNumOfGrids(); i++)
+			sudokuGrid.add(grid.getPanelAt(i));
+	}
 
-		for(int i = 0; i < sGrids.length; i++)
+	// check for input of a text file on the command line and store data into an array list if there is
+	// @Param args - input from the command line
+	public static List<String> checkAndExtractInput(String[] args)
+	{
+		// initialize variables that will hold info for potential text file
+		String filename = null;
+		List<String> fileInput = new ArrayList<String>();
+
+		// verify if user input has at least 1 argument (meaning user passed text file argument)
+		if (args.length > 0)
 		{
-			mainContainer.add(sGrids[i]);
+			// get file name and initialize a File object to prepare for extraction of data
+			filename = args[0];
+			File file = new File(filename);
+			System.out.println(filename);
+
+			//try and catch statement that checks if file exists
+			try
+			{
+				// create buffered reader object
+				FileReader fileReader = new FileReader(filename);
+				BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+				// initialize string to grab one line at a time from text file
+				String line = null;
+
+				// add each line in the text file to the array list
+				while ((line = bufferedReader.readLine()) != null) 
+					fileInput.add(line);
+
+				// close buffered reader
+				bufferedReader.close();
+
+			}
+			catch(FileNotFoundException e)
+			{
+				//exit if file was not found
+				System.out.println("ERROR: FILE NOT FOUND BRUHH");
+				System.exit(0);
+			}
+			catch(IOException e)
+			{
+				System.exit(0);
+			}
+
+			return fileInput;
 		}
+
+		// return null if there is no text file passed
+		return null;
 	}
 
 
 	public static void main(String[] args) throws Exception 
 	{
-
-		String filename = null;
-		List<String> fileInput = new ArrayList<String>();
-
-		if (0 < args.length) {
-			filename = args[0];
-			File file = new File(filename);
-			System.out.println(filename);
-		}
-
-		try{
-			FileReader fileReader = new FileReader(filename);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-			String line = null;
-			while ((line = bufferedReader.readLine()) != null) {
-				fileInput.add(line);
-			}
-
-			fileInput.toArray(new String[fileInput.size()]);
-
-			GuiLayout app = new GuiLayout(fileInput);
-			app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-			bufferedReader.close();
-
-		}
-		catch(FileNotFoundException e){
-			System.out.println("ERROR: FILE NOT FOUND BRUHH");
-			System.exit(0);
-		}
-
-		
-
-		
-
-		
-
-		
-
+		// initialize gui application
+		GuiLayout app = new GuiLayout(checkAndExtractInput(args));
+		app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-
 }
