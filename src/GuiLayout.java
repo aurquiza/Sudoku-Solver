@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.*;
+
 
 public class GuiLayout extends JFrame 
 {
@@ -36,6 +38,7 @@ public class GuiLayout extends JFrame
 	private JPanel sudokuGrid; 
 	private JPanel masterPanel;
 	private JPanel inputButtons;
+
 
 	public GuiLayout(List<String> input)
 	{
@@ -69,12 +72,49 @@ public class GuiLayout extends JFrame
 
 		// store input file into an arraylist 
 		fullBoard  = input;
-		printInputList();
+		splitInput();
 		
 		// set the size and visibility
 		setSize(770,600);
 		setVisible(true);
 
+	}
+
+	public void displayLoadedBoard(int a, int b, int c){
+
+		int x = a;
+		int y = b;
+		int number = c;
+
+		System.out.println("coordinates: " + x + ", " + y + " Number: " + number );
+		
+
+		
+	}
+
+	//Spliting the input from the file, splits one line at a time
+	public void splitInput(){
+
+
+		String[] tempArray;
+
+		int[] boardArray = new int[3];
+
+		for(int i = 0; i < fullBoard.size(); i++){
+
+			tempArray = fullBoard.get(i).split(" ");;
+			boardArray = new int[tempArray.length];
+
+				
+			boardArray[0] = Integer.parseInt(tempArray[0]);
+			boardArray[1] = Integer.parseInt(tempArray[1]);
+			boardArray[2] = Integer.parseInt(tempArray[2]);
+
+		
+			displayLoadedBoard(boardArray[0], boardArray[1], boardArray[2]);
+			System.out.println();
+			
+		}
 	}
 
 	// print array list to verify if input was stored
