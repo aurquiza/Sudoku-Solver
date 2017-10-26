@@ -91,13 +91,24 @@ public class Grid extends GridLayout
 		return gridSections;
 	}
 
+<<<<<<< HEAD
 	// getter method that acts like a 2d array to access buttons within the
 	// subgrid class
+=======
+	//returns the cells at a single subgrid
+>>>>>>> cb8dde8e924a782bd0f1a8328e18b38f062d272f
 	public buttonClass[] getSubAtCellAt(int subgrid)
 	{
 
 		return gridSections[subgrid].getCells();
+<<<<<<< HEAD
 	}
+=======
+
+	
+	}
+
+>>>>>>> cb8dde8e924a782bd0f1a8328e18b38f062d272f
 
 /*
 	Name: Alexis Urquiza, Eric Leon, Jakub Glebocki

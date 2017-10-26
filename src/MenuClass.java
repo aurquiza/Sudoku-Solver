@@ -9,84 +9,106 @@
 
    - each sub-menu is added to the appropriate menu and has its event handler created here 
 */
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+   import java.awt.*;
+   import java.awt.event.*;
+   import javax.swing.*;
+   import javax.swing.JFileChooser;
+   import java.io.File;   
+   import java.util.ArrayList;
+   import java.util.List;
 
-public class MenuClass extends JFrame{
+
+   public class MenuClass extends JFrame{
 
    // initialize instances
-   JMenu fileMenu;
-   JMenu helpMenu;
-   JMenu hintMenu;
-   Grid grid;
-
+      JMenu fileMenu;
+      JMenu helpMenu;
+      JMenu hintMenu;
+      Grid grid;  
+      GuiLayout GUI;
+      private List<String> board = new ArrayList<String>();
+      
+      JFileChooser fileChooser = new JFileChooser();
    // constructor 
    // @Param setGrid - Will hold object as a reference where the menus can modify cells for algorithms, input files, etc.
-   public MenuClass(Grid setGrid)
-   {
-      grid = setGrid;
-      createMenu();
-   }
+      public MenuClass(Grid setGrid, GuiLayout board)
+      {
+         grid = setGrid;
+         GUI = board;
+         createMenu();
+      }
 
    // create new menus and call methods to create and add sub-menus
-   public void createMenu()
-   {
+      public void createMenu()
+      {
       // create menus
-      fileMenu = new JMenu( "File" );
-      helpMenu = new JMenu("Help");
-      hintMenu = new JMenu("Hint");
+         fileMenu = new JMenu( "File" );
+         helpMenu = new JMenu("Help");
+         hintMenu = new JMenu("Hint");
 
       //create and add sub-menus
-      fileMenuItems();
-      HelpMenuItems();
-      HintMenuItems();
+         fileMenuItems();
+         HelpMenuItems();
+         HintMenuItems();
 
-   }
+      }
 
    // create sub-menus for the menu item and create event-handlers for each one
-   public void fileMenuItems()
-  {
+      public void fileMenuItems()
+      {
 
       // load puzzle sub-menu will prompt user to add pre-existing puzzle
-      JMenuItem loadPuzzle = new JMenuItem( "Load Puzzle" );
-      fileMenu.add( loadPuzzle );
-      loadPuzzle.addActionListener(
-         new ActionListener() 
+         JMenuItem loadPuzzle = new JMenuItem( "Load Puzzle" );
+         fileMenu.add( loadPuzzle );
+         loadPuzzle.addActionListener(
+            new ActionListener() 
          {  // anonymous inner class
             // prompt user to input text file containing new sudoku puzzle
             public void actionPerformed( ActionEvent event )
             {
-               JOptionPane.showMessageDialog( MenuClass.this,
-               "This is for loading in a puzzle",
-               "Load Puzzle", JOptionPane.PLAIN_MESSAGE );
-            }
+               // JOptionPane.showMessageDialog( MenuClass.this,
+               // "This is for loading in a puzzle",
+               // "Load Puzzle", JOptionPane.PLAIN_MESSAGE );
+               buttonClass[] buttonArray;
+
+               String[] inputfile;
+              JFileChooser fileChooser = new JFileChooser();
+              fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+              int result = fileChooser.showOpenDialog(fileMenu);
+              if (result == JFileChooser.APPROVE_OPTION) {
+                 File selectedFile = fileChooser.getSelectedFile();
+                 GUI.clearBoard();
+                 board = GUI.checkAndExtractInput(selectedFile.getName());
+                 GUI.splitInput(board);
+                 //System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+              }
+           }
          }  // end anonymous inner class
       ); // end call to addActionListener
 
 
       // store puzzle sub-menu will store the state of the board into a text file
-      JMenuItem storePuzzle = new JMenuItem( "Store Puzzle" );
-      fileMenu.add( storePuzzle );
-      storePuzzle.addActionListener(
-         new ActionListener() 
+         JMenuItem storePuzzle = new JMenuItem( "Store Puzzle" );
+         fileMenu.add( storePuzzle );
+         storePuzzle.addActionListener(
+            new ActionListener() 
          {  // anonymous inner class
             // gets current state of the board and stores that state into a text file
             public void actionPerformed( ActionEvent event )
             {
                JOptionPane.showMessageDialog( MenuClass.this,
-               "This is for Storing a puzzle",
-               "Store Puzzle", JOptionPane.PLAIN_MESSAGE );
+                  "This is for Storing a puzzle",
+                  "Store Puzzle", JOptionPane.PLAIN_MESSAGE );
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
 
 
       // exit sub-menu will exit the program
-      JMenuItem exit = new JMenuItem( "EXIT" );
-      fileMenu.add( exit );
-      exit.addActionListener(
-         new ActionListener() 
+         JMenuItem exit = new JMenuItem( "EXIT" );
+         fileMenu.add( exit );
+         exit.addActionListener(
+            new ActionListener() 
          {  // anonymous inner class
             // exit the program
             public void actionPerformed( ActionEvent event )
@@ -96,34 +118,34 @@ public class MenuClass extends JFrame{
          }  // end anonymous inner class
       ); // end call to addActionListener
 
-   }
+      }
 
    // create the sub-menus for the Help menu and add event-handlers for each one
-   public void HelpMenuItems()
-   {
+      public void HelpMenuItems()
+      {
 
       //Sudoku Rules displays information about how to play the game
-      JMenuItem howTo = new JMenuItem( "Sudoku Rules" );
-      helpMenu.add( howTo );
-      howTo.addActionListener(
+         JMenuItem howTo = new JMenuItem( "Sudoku Rules" );
+         helpMenu.add( howTo );
+         howTo.addActionListener(
         new ActionListener() {  // anonymous inner class
             // display message dialog when user selects Sudoku Rules...
-            public void actionPerformed( ActionEvent event )
-            {
-               JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is how to play Sudoku: ",
-                  "Sudoku Rules", JOptionPane.PLAIN_MESSAGE );
-            }
+         public void actionPerformed( ActionEvent event )
+         {
+            JOptionPane.showMessageDialog( MenuClass.this,
+               "This is how to play Sudoku: ",
+               "Sudoku Rules", JOptionPane.PLAIN_MESSAGE );
+         }
         }  // end anonymous inner class
       ); // end call to addActionListener
 
 
       // interface how to sub-menu will have information on how to use gui
       // interface
-      JMenuItem interfce = new JMenuItem( "Interface How To" );
-      helpMenu.add( interfce );
-      interfce.addActionListener(
-         new ActionListener() 
+         JMenuItem interfce = new JMenuItem( "Interface How To" );
+         helpMenu.add( interfce );
+         interfce.addActionListener(
+            new ActionListener() 
          {  // anonymous inner class
             // display message dialog when user selects Interface How To...
             public void actionPerformed( ActionEvent event )
@@ -138,11 +160,11 @@ public class MenuClass extends JFrame{
 
       // About sub-menu will have information about authors of the program. to
       // with grading
-      JMenuItem about = new JMenuItem( "About" );
-      about.setMnemonic( 'a' );
-      helpMenu.add( about );
-      about.addActionListener(
-         new ActionListener() 
+         JMenuItem about = new JMenuItem( "About" );
+         about.setMnemonic( 'a' );
+         helpMenu.add( about );
+         about.addActionListener(
+            new ActionListener() 
          {  // anonymous inner class
             // display message dialog when user selects About...
             public void actionPerformed( ActionEvent event )
@@ -156,19 +178,19 @@ public class MenuClass extends JFrame{
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
-   }
+      }
 
 
    // create sub-menus for the Hint menu as well as add event-handlers for each one
-   public void HintMenuItems()
-   {
+      public void HintMenuItems()
+      {
 
       // check-fill sub-menu is a check box that will give the user an error if number they
       // attempted to inser is not in the candidate list for that cell
-      JMenuItem check = new JMenuItem( "Check-fill" );
-      hintMenu.add( check );
-      check.addActionListener(
-         new ActionListener() 
+         JMenuItem check = new JMenuItem( "Check-fill" );
+         hintMenu.add( check );
+         check.addActionListener(
+            new ActionListener() 
          {  // anonymous inner class
             public void actionPerformed( ActionEvent event )
             {
@@ -181,9 +203,9 @@ public class MenuClass extends JFrame{
 
 
       // Single-Algorithm sub-menu searches each cell to see if there is only one candidate
-      JMenuItem singleAlgo = new JMenuItem( "Single Algorithm" );
-      hintMenu.add( singleAlgo );
-      singleAlgo.addActionListener(
+         JMenuItem singleAlgo = new JMenuItem( "Single Algorithm" );
+         hintMenu.add( singleAlgo );
+         singleAlgo.addActionListener(
          new ActionListener() {  // anonymous inner class
             // display message dialog when user selects About...
             public void actionPerformed( ActionEvent event )
@@ -198,9 +220,9 @@ public class MenuClass extends JFrame{
 
       // Hidden-Single-Algorithm sub-menu will check each cell and its appropriate
       // row, column and box to determine if there it has a unique candidate
-      JMenuItem hSingleAlgo = new JMenuItem( "Hidden Single Algorithm" );
-      hintMenu.add( hSingleAlgo );
-      hSingleAlgo.addActionListener(
+         JMenuItem hSingleAlgo = new JMenuItem( "Hidden Single Algorithm" );
+         hintMenu.add( hSingleAlgo );
+         hSingleAlgo.addActionListener(
          new ActionListener() {  // anonymous inner class
             //run hidden-single algorithm
             public void actionPerformed( ActionEvent event )
@@ -215,27 +237,27 @@ public class MenuClass extends JFrame{
 
       // Locked Candidate Algorithm sub-menu will look at different cells in a cell's row
       // and column to exclude candidates in that specific cell
-      JMenuItem LCanditateAlgo = new JMenuItem( "Locked Candidate Algorithm" );
-      hintMenu.add( LCanditateAlgo );
-      LCanditateAlgo.addActionListener(
-         new ActionListener() 
+         JMenuItem LCanditateAlgo = new JMenuItem( "Locked Candidate Algorithm" );
+         hintMenu.add( LCanditateAlgo );
+         LCanditateAlgo.addActionListener(
+            new ActionListener() 
          {  // anonymous inner class
             // run locked candidate algorithm
             public void actionPerformed( ActionEvent event )
             {
                JOptionPane.showMessageDialog( MenuClass.this,
-               "This is for the Locked Candidate Algorithm",
-               "LCanditateAlgo", JOptionPane.PLAIN_MESSAGE );
+                  "This is for the Locked Candidate Algorithm",
+                  "LCanditateAlgo", JOptionPane.PLAIN_MESSAGE );
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
 
 
       // naked pairs algorithm
-      JMenuItem nakePairsAlgo = new JMenuItem( "Naked Pairs Algorithm" );
-      hintMenu.add( nakePairsAlgo );
-      nakePairsAlgo.addActionListener(
-         new ActionListener() 
+         JMenuItem nakePairsAlgo = new JMenuItem( "Naked Pairs Algorithm" );
+         hintMenu.add( nakePairsAlgo );
+         nakePairsAlgo.addActionListener(
+            new ActionListener() 
          {  // anonymous inner class
             public void actionPerformed( ActionEvent event )
             {
@@ -246,12 +268,12 @@ public class MenuClass extends JFrame{
          }  // end anonymous inner class
       ); // end call to addActionListener
 
-       
+
        // fill all algorithm
-      JMenuItem fillAll = new JMenuItem( "Fill All" );
-      hintMenu.add( fillAll );
-      fillAll.addActionListener(
-         new ActionListener() 
+         JMenuItem fillAll = new JMenuItem( "Fill All" );
+         hintMenu.add( fillAll );
+         fillAll.addActionListener(
+            new ActionListener() 
          {  // anonymous inner class
             // display message dialog when user selects About...
             public void actionPerformed( ActionEvent event )
@@ -262,23 +284,23 @@ public class MenuClass extends JFrame{
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
-   }
+      }
 
    // getter method that returns file menu
-   public JMenu getFileMenu()
-   {
-      return fileMenu;
-   }
+      public JMenu getFileMenu()
+      {
+         return fileMenu;
+      }
 
    // getter method that returns help menu
-   public JMenu getHelpMenu()
-   {
-      return helpMenu;
-   }
+      public JMenu getHelpMenu()
+      {
+         return helpMenu;
+      }
 
    // getter method that returns hint menu
-   public JMenu getHintMenu(){
-      return hintMenu;
-   }
+      public JMenu getHintMenu(){
+         return hintMenu;
+      }
 
-}
+   }
