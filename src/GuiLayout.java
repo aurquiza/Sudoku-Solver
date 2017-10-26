@@ -82,30 +82,18 @@
 
  		}
 
- 		public int convertXnY(int pos){
-
+ 		public int convertXnY(int pos)
+ 		{
  			switch(pos){
-
- 				case 1:
- 				return 0;
- 				case 2:
- 				return 1;
- 				case 3:
- 				return 2;
- 				case 4:
- 				return 0;
- 				case 5:
- 				return 1;
- 				case 6:
- 				return 2;
- 				case 7:
- 				return 0;
- 				case 8:
- 				return 1;
- 				case 9:
- 				return 2;
-
-
+ 				case 1: return 0;
+ 				case 2: return 1;
+ 				case 3: return 2;
+ 				case 4: return 0;
+ 				case 5: return 1;
+ 				case 6: return 2;
+ 				case 7: return 0;
+ 				case 8: return 1;
+ 				case 9: return 2;
  			}
 
  			return -1;
@@ -155,44 +143,28 @@
 
  			
  			//For top 3 grids
- 				if((a >= 0 && a <= 3) && (b >= 0 && b <= 3)){
+ 				if((a >= 0 && a <= 3) && (b >= 0 && b <= 3))
  					buttonArray = grid.getSubAtCellAt(0);
- 				}
- 				else if((a >= 0 && a <= 3) && (b >= 4 && b <= 6)){
+ 				else if((a >= 0 && a <= 3) && (b >= 4 && b <= 6))
  					buttonArray = grid.getSubAtCellAt(1);
- 				}
- 				else if((a >= 0 && a <= 3) && (b >= 7 && b <= 9)){
+ 				else if((a >= 0 && a <= 3) && (b >= 7 && b <= 9))
  					buttonArray = grid.getSubAtCellAt(2);
- 				}
 
  			//Middle grids
- 				else if((a >= 4 && a <= 6) && (b >= 0 && b <= 3)){
+ 				else if((a >= 4 && a <= 6) && (b >= 0 && b <= 3))
  					buttonArray = grid.getSubAtCellAt(3);
-
- 				}
-
- 				else if((a >= 4 && a <= 6) && (b >= 4 && b <= 6)){
+ 				else if((a >= 4 && a <= 6) && (b >= 4 && b <= 6))
  					buttonArray = grid.getSubAtCellAt(4);
-
- 				}
-
- 				else if((a >= 4 && a <= 6) && (b >= 7 && b <= 9)){
+ 				else if((a >= 4 && a <= 6) && (b >= 7 && b <= 9))
  					buttonArray = grid.getSubAtCellAt(5);
-
- 				}
-
  			//bottom grids
 
- 				else if((a >= 7 && a <= 9) && (b >= 0 && b <= 3)){
+ 				else if((a >= 7 && a <= 9) && (b >= 0 && b <= 3))
  					buttonArray = grid.getSubAtCellAt(6);
- 				}
- 				else if((a >= 7 && a <= 9) && (b >= 4 && b <= 6)){
+ 				else if((a >= 7 && a <= 9) && (b >= 4 && b <= 6))
  					buttonArray = grid.getSubAtCellAt(7);
- 				}
-
- 				else if((a >= 7 && a <= 9) && (b >= 7 && b <=9)){
+ 				else if((a >= 7 && a <= 9) && (b >= 7 && b <=9))
  					buttonArray = grid.getSubAtCellAt(8);
- 				}
 
 
  				int xPos = 0;
@@ -206,35 +178,19 @@
 
 
  				for(int i = 0; i < 3; i++)
- 				{
-
-
  					twoDArray[0][i] = buttonArray[i];
-
- 				}
-
  				for(int x = 3; x < 6; x++)
  				{
-
  					int index = x % 3;
-
  					twoDArray[1][index] = buttonArray[x];
-
-
  				}
-
  				for(int z = 6; z < 9; z++)
  				{
-
-
-
  					int index = z % 3;
  					twoDArray[2][index] = buttonArray[z];
-
  				}
 
  				twoDArray[xPos][yPos].setText(Integer.toString(c)); 
-
  				twoDArray[xPos][yPos].setImmortal(true);
  			
  		}
@@ -242,24 +198,8 @@
 	//Spliting the input from the file, splits one line at a time
  		public  void splitInput(List<String> board){
 
-		// buttonClass[] buttonArray;
-		// buttonArray = grid.getSubAtCellAt(0);
-
-		// buttonArray[0].setText("1");
-		// buttonArray[1].setText("2");
-		// buttonArray[2].setText("3");
-		// buttonArray[3].setText("4");
-		// buttonArray[4].setText("5");
-		// buttonArray[5].setText("6");
-		// buttonArray[6].setText("7");
-		// buttonArray[7].setText("8");
-		// buttonArray[8].setText("9");
-
-
  			String[] tempArray;
-
  			int[] boardArray = new int[3];
-
  			for(int i = 0; i < board.size(); i++){
 
  				tempArray = board.get(i).split(" ");;
