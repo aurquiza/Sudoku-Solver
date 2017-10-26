@@ -91,6 +91,15 @@ public class Grid extends GridLayout
 		return gridSections;
 	}
 
+	//returns the cells at a single subgrid
+	public buttonClass[] getSubAtCellAt(int subgrid)
+	{
+
+		return gridSections[subgrid].getCells();
+
+	
+	}
+
 
 /*
    Name: Alexis Urquiza, Eric Leon, Jakub Glebocki

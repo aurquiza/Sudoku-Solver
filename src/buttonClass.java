@@ -17,7 +17,7 @@ public class buttonClass extends JButton
 	//instance variables
 	int cellSection;
 	int candidates[];
-
+	boolean immortal = false;
 	// constructor
 	// @Param s - string that will be displayed on the gui
 	// @Param cellSec - what position the cell belongs to in a subgrid
@@ -35,6 +35,10 @@ public class buttonClass extends JButton
 	public void setCellValue(String val)
 	{
 		setText(val);
+	}
+
+	public void setImmortal(boolean x){
+		immortal = x;
 	}
 
 }
