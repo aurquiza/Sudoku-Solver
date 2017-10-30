@@ -156,10 +156,11 @@
 
      	}
 
-
+      //Checks where the button was pressed on the grid
       public int[] checkGrid(int pos)
       {
 
+        //Switch statement for determning where the button was clicked
         switch(pos)
         {
           case 0: return (new int[]{0,0});
@@ -178,16 +179,22 @@
         return null;
       }
 
+
+      //Loop through the grid and find the button clicked
       public int [] loopThroughSubGrid(buttonClass[] input)
       { 
 
+        //int array to store the x and y positions
         int [] pos = new int[]{0,0};
 
+        //int array for the grid sections 
         int [] gridArray = checkGrid(input[0].getCellSection());
 
+        //two d array delcared to help determine the x and y easier
         buttonClass [][] twoDArray = new buttonClass[3][3];
 
 
+        //Turn the 1D array to a 2D array
         for(int i = 0; i < 3; i++)
         {
 
@@ -217,22 +224,19 @@
         }
 
 
-
+        //Loop through the grid 
         for(int i = 0; i < 3; i++){
           for(int x = 0; x < 3; x++){
 
+            //If the button was found, update the X and Y positions
             if(twoDArray[i][x].getText() == currentInput){
-                //System.out.println("The if statements ran\n");
               pos[0] = gridArray[0] + i;
               pos[1] = gridArray[1] + x;
             }
-
-
-
           }
         }
 
-
+        //Return the int array with the positions
         return pos;
 
       }
@@ -252,15 +256,18 @@
            buttonClass b = (buttonClass) event.getSource();
            b.setCellValue(currentInput);
 
+           //button array to keep track of the board as the user interacts with the board
            buttonClass [] trackBoard;
 
+           //get the sub grid section that was clicked
            trackBoard = getSubAtCellAt(b.getCellSection());
 
-
+           //return the int array position with the X and Y positions
            int [] positions = loopThroughSubGrid(trackBoard);
 
-
+           //return a string with all the info to put into a List of strings
            String update = keepTrack(positions[0], positions[1], currentInput);
+           //Put the newly created string into the List of strings
            appendBoard(update);
 
          }
@@ -304,7 +311,7 @@
    }
 
 
-
+   //Convertrs the X, Y, and Current value into a string
    public String keepTrack(int x, int y, String curr){
 
 
@@ -314,18 +321,10 @@
     return input;
   }
 
-
-
-
+  //Adds the newly created string to the List of Strings
   public void appendBoard(String input){
 
-
    updateBoard.add(input);
-
-  //  for(int i = 0; i < updateBoard.size(); i++){
-  //   System.out.print(updateBoard.get(i));
-  // }
-  // System.out.println();
 
 }
 

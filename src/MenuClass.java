@@ -70,15 +70,17 @@
             // prompt user to input text file containing new sudoku puzzle
             public void actionPerformed( ActionEvent event )
             {
-               // JOptionPane.showMessageDialog( MenuClass.this,
-               // "This is for loading in a puzzle",
-               // "Load Puzzle", JOptionPane.PLAIN_MESSAGE );
+               //Create button Array and inputfile
                buttonClass[] buttonArray;
-
                String[] inputfile;
+
+               //Choose a file to upload
                JFileChooser fileChooser = new JFileChooser();
+               //let the user select a file
                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
                int result = fileChooser.showOpenDialog(fileMenu);
+
+               //if it is a valid file
                if (result == JFileChooser.APPROVE_OPTION) {
                  File selectedFile = fileChooser.getSelectedFile();
                  GUI.clearBoard();
@@ -109,17 +111,19 @@
 
                if(val == JFileChooser.APPROVE_OPTION){
 
-
-
+                  //select where to store the new file
                   File f = fileStore.getSelectedFile();
                   String path = f.getAbsolutePath();
                   
+                  //try and catch
                   try(PrintWriter out = new PrintWriter(f)){
 
-                    
+                     //get the size of the original board
                      int size = GUI.returnSize();
+                     //get the size of the updated board as the user interacts with it
                      int updatedBoardSize = grid.returnUpdateBoard();
 
+                     //loop through the original board and print out info
                      for(int i = 0; i < size; i++){
 
                         if(i % 3 == 0 && i != 0){
@@ -129,6 +133,7 @@
 
                      }
 
+                     //loop through the updated board and print out info
                      for(int x = 0; x < updatedBoardSize; x++){
                         if(x % 3 == 0 && x != 0){
                            out.println();
