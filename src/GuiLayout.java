@@ -40,7 +40,8 @@
  		private JPanel sudokuGrid; 
  		private JPanel masterPanel;
  		private JPanel inputButtons;
-
+ 		
+ 		
 
  		public GuiLayout(List<String> input)
  		{
@@ -76,12 +77,15 @@
  			fullBoard  = input;
  			splitInput(fullBoard);
 
+ 			
+
 		// set the size and visibility
  			setSize(770,600);
  			setVisible(true);
 
  		}
 
+ 		//convert out 0-8 grid to the 1-9 grid
  		public int convertXnY(int pos){
 
  			switch(pos){
@@ -111,6 +115,16 @@
  			return -1;
  		}
 
+
+
+ 		public  int returnSize()
+ 		{
+
+ 			return fullBoard.size();
+
+ 		}
+
+ 		//method to clear the entire board
  		public void clearBoard()
  		{
  			buttonClass[] clearArr = null;
@@ -125,6 +139,9 @@
  			}
  		}
 
+
+
+ 		//Check if the coordiantes are valid
  		public boolean checkPuzzle(int x, int y, int z){
 
  			if(x <= 0 || x > 9){
@@ -141,120 +158,116 @@
 
  		}
 
+ 		public String returnCoords(int index){
+ 			List<String> storedBoard = fullBoard;
+
+ 			return storedBoard.get(index);
+ 		}
+
+ 		
+ 		//Display the board from the text file reading in 
  		public  void displayLoadedBoard(int a, int b, int c){
+ 			//Check if the coordinates are valid
  			if(!(checkPuzzle(a, b, c))){
+
  				System.err.println("INVALID INPUT BRUH " + a + " " + b + " : " + c);
+ 				fullBoard.remove(Integer.toString(a) + " " + Integer.toString(b) + " " + Integer.toString(c));
+
  				return;
  			}
-
+ 			//setup buttona array
  			buttonClass[] buttonArray = null;
 
+ 			//set up 2D array
  			buttonClass[][] twoDArray = new buttonClass[3][3];
-
- 			boolean check = checkPuzzle(a, b, c);
-
  			
- 			//For top 3 grids
- 				if((a >= 0 && a <= 3) && (b >= 0 && b <= 3)){
- 					buttonArray = grid.getSubAtCellAt(0);
- 				}
- 				else if((a >= 0 && a <= 3) && (b >= 4 && b <= 6)){
- 					buttonArray = grid.getSubAtCellAt(1);
- 				}
- 				else if((a >= 0 && a <= 3) && (b >= 7 && b <= 9)){
- 					buttonArray = grid.getSubAtCellAt(2);
- 				}
+ 				//For top 3 grids
+ 			if((a >= 0 && a <= 3) && (b >= 0 && b <= 3)){
+ 				buttonArray = grid.getSubAtCellAt(0);
+ 			}
+ 			else if((a >= 0 && a <= 3) && (b >= 4 && b <= 6)){
+ 				buttonArray = grid.getSubAtCellAt(1);
+ 			}
+ 			else if((a >= 0 && a <= 3) && (b >= 7 && b <= 9)){
+ 				buttonArray = grid.getSubAtCellAt(2);
+ 			}
 
- 			//Middle grids
- 				else if((a >= 4 && a <= 6) && (b >= 0 && b <= 3)){
- 					buttonArray = grid.getSubAtCellAt(3);
+ 				//Middle grids
+ 			else if((a >= 4 && a <= 6) && (b >= 0 && b <= 3)){
+ 				buttonArray = grid.getSubAtCellAt(3);
 
- 				}
+ 			}
 
- 				else if((a >= 4 && a <= 6) && (b >= 4 && b <= 6)){
- 					buttonArray = grid.getSubAtCellAt(4);
+ 			else if((a >= 4 && a <= 6) && (b >= 4 && b <= 6)){
+ 				buttonArray = grid.getSubAtCellAt(4);
 
- 				}
+ 			}
 
- 				else if((a >= 4 && a <= 6) && (b >= 7 && b <= 9)){
- 					buttonArray = grid.getSubAtCellAt(5);
+ 			else if((a >= 4 && a <= 6) && (b >= 7 && b <= 9)){
+ 				buttonArray = grid.getSubAtCellAt(5);
 
- 				}
+ 			}
 
- 			//bottom grids
+ 				//bottom grids
 
- 				else if((a >= 7 && a <= 9) && (b >= 0 && b <= 3)){
- 					buttonArray = grid.getSubAtCellAt(6);
- 				}
- 				else if((a >= 7 && a <= 9) && (b >= 4 && b <= 6)){
- 					buttonArray = grid.getSubAtCellAt(7);
- 				}
+ 			else if((a >= 7 && a <= 9) && (b >= 0 && b <= 3)){
+ 				buttonArray = grid.getSubAtCellAt(6);
+ 			}
+ 			else if((a >= 7 && a <= 9) && (b >= 4 && b <= 6)){
+ 				buttonArray = grid.getSubAtCellAt(7);
+ 			}
 
- 				else if((a >= 7 && a <= 9) && (b >= 7 && b <=9)){
- 					buttonArray = grid.getSubAtCellAt(8);
- 				}
-
-
- 				int xPos = 0;
- 				int yPos = 0;
+ 			else if((a >= 7 && a <= 9) && (b >= 7 && b <=9)){
+ 				buttonArray = grid.getSubAtCellAt(8);
+ 			}
 
 
- 				xPos = convertXnY(a);
- 				yPos = convertXnY(b);
+ 				//Getting the Xposition and Yposition
+ 			int xPos = 0;
+ 			int yPos = 0;
+
+ 				//Converting the x and y positions
+ 			xPos = convertXnY(a);
+ 			yPos = convertXnY(b);
+
+
+ 				//Setting up our Two D array
+ 			for(int i = 0; i < 3; i++)
+ 			{
+
+
+ 				twoDArray[0][i] = buttonArray[i];
+
+ 			}
+
+ 			for(int x = 3; x < 6; x++)
+ 			{
+
+ 				int index = x % 3;
+
+ 				twoDArray[1][index] = buttonArray[x];
+
+
+ 			}
+
+ 			for(int z = 6; z < 9; z++)
+ 			{
 
 
 
+ 				int index = z % 3;
+ 				twoDArray[2][index] = buttonArray[z];
 
- 				for(int i = 0; i < 3; i++)
- 				{
+ 			}
 
+ 			twoDArray[xPos][yPos].setText(Integer.toString(c)); 
 
- 					twoDArray[0][i] = buttonArray[i];
-
- 				}
-
- 				for(int x = 3; x < 6; x++)
- 				{
-
- 					int index = x % 3;
-
- 					twoDArray[1][index] = buttonArray[x];
-
-
- 				}
-
- 				for(int z = 6; z < 9; z++)
- 				{
-
-
-
- 					int index = z % 3;
- 					twoDArray[2][index] = buttonArray[z];
-
- 				}
-
- 				twoDArray[xPos][yPos].setText(Integer.toString(c)); 
-
- 				twoDArray[xPos][yPos].setImmortal(true);
+ 			twoDArray[xPos][yPos].setImmortal(true);
  			
  		}
 
 	//Spliting the input from the file, splits one line at a time
  		public  void splitInput(List<String> board){
-
-		// buttonClass[] buttonArray;
-		// buttonArray = grid.getSubAtCellAt(0);
-
-		// buttonArray[0].setText("1");
-		// buttonArray[1].setText("2");
-		// buttonArray[2].setText("3");
-		// buttonArray[3].setText("4");
-		// buttonArray[4].setText("5");
-		// buttonArray[5].setText("6");
-		// buttonArray[6].setText("7");
-		// buttonArray[7].setText("8");
-		// buttonArray[8].setText("9");
-
 
  			String[] tempArray;
 
@@ -273,7 +286,7 @@
 
  				displayLoadedBoard(boardArray[0], boardArray[1], boardArray[2]);
 
- 				System.out.println();
+ 				//System.out.println();
 
  			}
  		}
@@ -333,6 +346,7 @@
 				// add each line in the text file to the array list
  					while ((line = bufferedReader.readLine()) != null) 
  						fileInput.add(line);
+
 
 				// close buffered reader
  					bufferedReader.close();

@@ -9,6 +9,7 @@
 
    - each sub-menu is added to the appropriate menu and has its event handler created here 
 */
+
    import java.awt.*;
    import java.awt.event.*;
    import javax.swing.*;
@@ -16,6 +17,8 @@
    import java.io.File;   
    import java.util.ArrayList;
    import java.util.List;
+   import java.io.PrintWriter;
+   import java.io.FileNotFoundException;
 
 
    public class MenuClass extends JFrame{
@@ -36,6 +39,7 @@
          grid = setGrid;
          GUI = board;
          createMenu();
+
       }
 
    // create new menus and call methods to create and add sub-menus
@@ -72,10 +76,10 @@
                buttonClass[] buttonArray;
 
                String[] inputfile;
-              JFileChooser fileChooser = new JFileChooser();
-              fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-              int result = fileChooser.showOpenDialog(fileMenu);
-              if (result == JFileChooser.APPROVE_OPTION) {
+               JFileChooser fileChooser = new JFileChooser();
+               fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+               int result = fileChooser.showOpenDialog(fileMenu);
+               if (result == JFileChooser.APPROVE_OPTION) {
                  File selectedFile = fileChooser.getSelectedFile();
                  GUI.clearBoard();
                  board = GUI.checkAndExtractInput(selectedFile.getName());
@@ -96,9 +100,55 @@
             // gets current state of the board and stores that state into a text file
             public void actionPerformed( ActionEvent event )
             {
-               JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is for Storing a puzzle",
-                  "Store Puzzle", JOptionPane.PLAIN_MESSAGE );
+   
+               JFileChooser fileStore = new JFileChooser();
+               fileStore.setFileSelectionMode(JFileChooser.APPROVE_OPTION);
+               fileStore.setMultiSelectionEnabled(false);
+
+               int val = fileStore.showSaveDialog(null);
+
+               if(val == JFileChooser.APPROVE_OPTION){
+
+
+
+                  File f = fileStore.getSelectedFile();
+                  String path = f.getAbsolutePath();
+                  
+                  try(PrintWriter out = new PrintWriter(f)){
+
+                    
+                     int size = GUI.returnSize();
+                     int updatedBoardSize = grid.returnUpdateBoard();
+
+                     for(int i = 0; i < size; i++){
+
+                        if(i % 3 == 0 && i != 0){
+                           out.println();
+                        }
+                        out.println(GUI.returnCoords(i));
+
+                     }
+
+                     for(int x = 0; x < updatedBoardSize; x++){
+                        if(x % 3 == 0 && x != 0){
+                           out.println();
+                        }
+
+                        out.println(grid.returnCoordsForUB(x));
+                     }
+                    
+                  
+               }
+
+                  catch(FileNotFoundException x){
+
+                     System.out.println("ERROR");
+
+                  }
+
+               }
+
+
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
@@ -133,8 +183,9 @@
          public void actionPerformed( ActionEvent event )
          {
             JOptionPane.showMessageDialog( MenuClass.this,
-               "This is how to play Sudoku: ",
-               "Sudoku Rules", JOptionPane.PLAIN_MESSAGE );
+                "Fill a number in to every cell in the grid, using the numbers 1 to 9\n" +
+                          "You can only use each number once in each row, each column, and in each of the 3×3 boxes",
+                  "Sudoku Rules", JOptionPane.PLAIN_MESSAGE );
          }
         }  // end anonymous inner class
       ); // end call to addActionListener
@@ -151,7 +202,20 @@
             public void actionPerformed( ActionEvent event )
             {
                JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is how to use ther Interface ",
+                                 "You click on one of the buttons on the side panel (1-9 or X)and then you click on one" +
+                          " of the buttons where you would like that number to go(in one of the 3x3 boxes)\n" +
+                          "File: \n" +
+                          "     -Load Puzzle, Allow the user to Load the puzzle,\n" +
+                          "     -Store Puzzle, store the puzzle\n" +
+                          "     -Exit- Exits the game\n" +
+                          "Help: \n" +
+                          "     -Sudoku Rules, Lists the rules of the Sudoku game\n" +
+                          "     -Interface how to-  use the program,\n" +
+                          "     -About,  Lists names of authors & netid's\n" +
+                          "Hint:\n" +
+                          "     -Check-fill which fills in as many blank cells as possible\n" +
+                          "     -Four different algorithms- to help out the player(single, hidden single etc)\n" +
+                          "     -Fill-all, fills in a many blank cells as possible using all four algorithms",
                   "Interface How To", JOptionPane.PLAIN_MESSAGE );
             }
          }  // end anonymous inner class
