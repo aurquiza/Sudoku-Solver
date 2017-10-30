@@ -8,18 +8,23 @@
      that determines how many sub-grids the gridlayout should have
 
    - The grid is manually set to create 9 cells for each subgrid
-
 */
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Grid extends GridLayout
 {
 	// instance variables
+	private Candidate cand;
 	private SubGrid gridSections[];
 	private SubGrid sideBar;
 	private String currentInput;
+	private boolean checkCandidates;
+	private GuiLayout gui;
+	private List<String> updateBoard = new ArrayList<String>();
 
 	//constructor
 	// @Param row - how many rows the grid should have
@@ -27,12 +32,16 @@ public class Grid extends GridLayout
 	// @Param hgap - what the horizontal gap should be between subgrids
 	// @Param vgap - what the vertical gap should be between subgrids
 	// @Param numSubGrids - how many sub-grids should the gridlayout contain
-	public Grid(int row, int col, int hgap, int vgap, int numSubGrids)
+	public Grid(int row, int col, int hgap, int vgap, int numSubGrids, GuiLayout g)
 	{
 		super(row, col, hgap, vgap);
-		currentInput = "-1";
+		gui = g;
+		currentInput = " ";
 		//create the specified number of sub-grids
 		createSubGrids(numSubGrids);
+		checkCandidates = false;
+
+	 	cand = new Candidate(this);
 
 		//sideBarLayout = new GridLayout(0,1);
 		sideBar = new SubGrid(new GridLayout(0,1), true, 0, 11);
@@ -52,6 +61,25 @@ public class Grid extends GridLayout
 			GridLayout newGrid = new GridLayout(3,3,0,0);
 			gridSections[i] = new SubGrid(newGrid, false, i, 9);
 		}
+	}
+
+	    //returns the size of the newly updated board
+    public int returnUpdateBoard(){
+      return updateBoard.size();
+    }
+
+    //returns the coordiantes of the board after it has been modified
+    public String returnCoordsForUB(int index){
+      List<String> storedBoard = updateBoard;
+
+      return storedBoard.get(index);
+    }
+
+	// this is a flag that determines if the user is allowed to place candidates
+	// outside the possible candidates
+	public void setAllowed(boolean b)
+	{
+		checkCandidates = b;
 	}
 
 	// sets input for what the a button's string should be set to
@@ -91,24 +119,34 @@ public class Grid extends GridLayout
 		return gridSections;
 	}
 
-<<<<<<< HEAD
 	// getter method that acts like a 2d array to access buttons within the
 	// subgrid class
-=======
 	//returns the cells at a single subgrid
->>>>>>> cb8dde8e924a782bd0f1a8328e18b38f062d272f
 	public buttonClass[] getSubAtCellAt(int subgrid)
 	{
-
 		return gridSections[subgrid].getCells();
-<<<<<<< HEAD
 	}
-=======
+
+	// checks if the user has finished filling in the puzzle
+	public boolean checkFinish()
+	{
+		for(int i  = 0; i < 9; i ++)
+		{
+			buttonClass b[] = gridSections[i].getCells();
+
+			for(int j = 0; j < 9; j++)
+			{
+				if(b[j].getText() == " ")
+					return false;
+			}
+		}
+
+		return true;
+	}
 
 	
-	}
 
->>>>>>> cb8dde8e924a782bd0f1a8328e18b38f062d272f
+
 
 /*
 	Name: Alexis Urquiza, Eric Leon, Jakub Glebocki
@@ -149,6 +187,93 @@ public class Grid extends GridLayout
 
 		}
 
+
+
+      //Checks where the button was pressed on the grid
+      public int[] checkGrid(int pos)
+      {
+
+        //Switch statement for determning where the button was clicked
+        switch(pos)
+        {
+          case 0: return (new int[]{0,0});
+          case 1: return (new int[]{0,3});
+          case 2: return (new int[]{0,6});
+          case 3: return (new int[]{3,0});
+          case 4: return (new int[]{3,3});
+          case 5: return (new int[]{3,6});
+          case 6: return (new int[]{6,0});
+          case 7: return (new int[]{6,3});
+          case 8: return (new int[]{6,6});
+        }
+
+
+
+        return null;
+      }
+
+
+      //Loop through the grid and find the button clicked
+      public int [] loopThroughSubGrid(buttonClass[] input)
+      { 
+
+        //int array to store the x and y positions
+        int [] pos = new int[]{0,0};
+
+        //int array for the grid sections 
+        int [] gridArray = checkGrid(input[0].getCellSection());
+
+        //two d array delcared to help determine the x and y easier
+        buttonClass [][] twoDArray = new buttonClass[3][3];
+
+
+        //Turn the 1D array to a 2D array
+        for(int i = 0; i < 3; i++)
+        {
+
+
+          twoDArray[0][i] = input[i];
+
+        }
+
+        for(int x = 3; x < 6; x++)
+        {
+
+          int index = x % 3;
+
+          twoDArray[1][index] = input[x];
+
+
+        }
+
+        for(int z = 6; z < 9; z++)
+        {
+
+
+
+          int index = z % 3;
+          twoDArray[2][index] = input[z];
+
+        }
+
+
+        //Loop through the grid 
+        for(int i = 0; i < 3; i++){
+          for(int x = 0; x < 3; x++){
+
+            //If the button was found, update the X and Y positions
+            if(twoDArray[i][x].getText() == currentInput){
+              pos[0] = gridArray[0] + i + 1;
+              pos[1] = gridArray[1] + x + 1;
+            }
+          }
+        }
+
+        //Return the int array with the positions
+        return pos;
+
+      }
+
 		// create and add cells to the JPanel
 		private void createCells()
 		{
@@ -161,13 +286,140 @@ public class Grid extends GridLayout
 					{
 						public void actionPerformed(ActionEvent event)
 						{
+							// check what button was pressed
 							buttonClass b = (buttonClass) event.getSource();
-							b.setCellValue(currentInput);
+
+							// what option was currently chosen? if "?" then just show candidates
+							if(getInput() == "?")
+							{
+								gui.setCandidateList(b.getCandidates());
+							}
+							else
+							{
+								boolean flag = true;
+								// restore previous candidate
+								String prev = b.getText();
+								// set new value to the cell
+								if(checkCandidates)
+								{
+									flag = evaluateUserChoice(b);
+								}
+
+								// is the user allowed to place that int?
+								if(flag)
+								{
+									b.setCellValue(currentInput);
+									// remove new value from the candidate list
+									cand.removeCandidate(currentInput, getGridSection(), b);
+									cand.restoreCandidate(prev, b);
+									if(checkFinish())
+									{
+										JOptionPane.showMessageDialog( null,
+				                  		"Congratulations on completing the puzzle!",
+				                 		 "Congrats", JOptionPane.PLAIN_MESSAGE );
+									}
+								}
+								else
+								{
+									JOptionPane.showMessageDialog( null,
+			                  		"Invalid: not in the candidate list",
+			                 		 "Error", JOptionPane.PLAIN_MESSAGE );
+								}
+
+
+					          	//button array to keep track of the board as the user interacts with the board
+					            buttonClass [] trackBoard;
+
+					            //get the sub grid section that was clicked
+					            trackBoard = getSubAtCellAt(b.getCellSection());
+
+					            //return the int array position with the X and Y positions
+					            int [] positions = loopThroughSubGrid(trackBoard);
+
+					            //return a string with all the info to put into a List of strings
+					            String update = keepTrack(positions[0], positions[1], currentInput);
+					            //Put the newly created string into the List of strings
+					            appendBoard(update);
+							}
+
 						}
 					}
 				);
 				add(cells[i]);
 			}
+		}
+
+
+	//convert out 0-8 grid to the 1-9 grid
+    public int convertXnY(int pos){
+
+      switch(pos){
+
+       case 1:
+       return 0;
+       case 2:
+       return 1;
+       case 3:
+       return 2;
+       case 4:
+       return 0;
+       case 5:
+       return 1;
+       case 6:
+       return 2;
+       case 7:
+       return 0;
+       case 8:
+       return 1;
+       case 9:
+       return 2;
+
+
+     }
+
+     return -1;
+   }
+
+
+   //Convertrs the X, Y, and Current value into a string
+    public String keepTrack(int x, int y, String curr)
+  	{
+
+
+     	//String input = Integer.toString(x) + " " + Integer.toString(y) + " " + Integer.toString(c);
+   		String input =  Integer.toString(x) + " " + Integer.toString(y) + " " + curr;
+
+    	return input;
+  	}
+
+ 	//Adds the newly created string to the List of Strings
+ 	public void appendBoard(String input)
+  	{
+
+  	 	updateBoard.add(input);
+
+	}
+
+		// this finds if the button's candidate list will allow the
+		// user to insert the current number they've chose
+		public boolean evaluateUserChoice(buttonClass b)
+		{
+			String[] buttonCand = b.getCandidates();
+			for(int i = 0; i < 9; i++)
+			{
+				if(buttonCand[i].equals(currentInput))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		// returns the subgrid section
+		public int getGridSection()
+		{
+			return SubGridSection;
 		}
 
 		// create buttons for the sidebar of the gui
@@ -193,10 +445,37 @@ public class Grid extends GridLayout
 			// special initialization for the "X" button
 			cells[cells.length - 2] = new buttonClass("X", 10);
 			add(cells[cells.length - 2]);
+			cells[cells.length - 2].addActionListener(
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent event)
+					{
+						setInput(" ");
+						JOptionPane.showMessageDialog( null,
+                  		"You are now in Clear Mode.",
+                 		 "Clear Mode", JOptionPane.PLAIN_MESSAGE );
+					}
+				}
+
+			);
 
 			// special initialization for the "?" button
 			cells[cells.length - 1] = new buttonClass("?", 11);
 			add(cells[cells.length - 1]);
+			cells[cells.length - 1].addActionListener(
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent event)
+					{
+						buttonClass b = (buttonClass) event.getSource();
+						setInput("?");
+						JOptionPane.showMessageDialog( null,
+                  		"You are now in Candidate List Display Mode.",
+                 		 "Candidate List Display Mode", JOptionPane.PLAIN_MESSAGE );
+					}
+				}
+
+			);
 		}
 
 		// getter method that returns array of cells

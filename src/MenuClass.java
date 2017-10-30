@@ -9,6 +9,7 @@
 
    - each sub-menu is added to the appropriate menu and has its event handler created here 
 */
+
    import java.awt.*;
    import java.awt.event.*;
    import javax.swing.*;
@@ -16,11 +17,14 @@
    import java.io.File;   
    import java.util.ArrayList;
    import java.util.List;
+   import java.io.PrintWriter;
+   import java.io.FileNotFoundException;
 
 
    public class MenuClass extends JFrame{
 
    // initialize instances
+      Algorithms algo;
       JMenu fileMenu;
       JMenu helpMenu;
       JMenu hintMenu;
@@ -33,6 +37,7 @@
    // @Param setGrid - Will hold object as a reference where the menus can modify cells for algorithms, input files, etc.
       public MenuClass(Grid setGrid, GuiLayout board)
       {
+         algo = new Algorithms(setGrid); 
          grid = setGrid;
          GUI = board;
          createMenu();
@@ -66,21 +71,19 @@
             // prompt user to input text file containing new sudoku puzzle
             public void actionPerformed( ActionEvent event )
             {
-               // JOptionPane.showMessageDialog( MenuClass.this,
-               // "This is for loading in a puzzle",
-               // "Load Puzzle", JOptionPane.PLAIN_MESSAGE );
+               Candidate c = new Candidate(grid);
                buttonClass[] buttonArray;
-
                String[] inputfile;
-              JFileChooser fileChooser = new JFileChooser();
-              fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-              int result = fileChooser.showOpenDialog(fileMenu);
-              if (result == JFileChooser.APPROVE_OPTION) {
-                 File selectedFile = fileChooser.getSelectedFile();
-                 GUI.clearBoard();
-                 board = GUI.checkAndExtractInput(selectedFile.getName());
-                 GUI.splitInput(board);
-                 //System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+               JFileChooser fileChooser = new JFileChooser();
+               fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+               int result = fileChooser.showOpenDialog(fileMenu);
+               if (result == JFileChooser.APPROVE_OPTION) 
+               {
+                  File selectedFile = fileChooser.getSelectedFile();
+                  GUI.clearBoard();
+                  c.resetCandidates();
+                  board = GUI.checkAndExtractInput(selectedFile.getName());
+                  GUI.splitInput(board);
               }
            }
          }  // end anonymous inner class
@@ -96,9 +99,58 @@
             // gets current state of the board and stores that state into a text file
             public void actionPerformed( ActionEvent event )
             {
-               JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is for Storing a puzzle",
-                  "Store Puzzle", JOptionPane.PLAIN_MESSAGE );
+   
+               JFileChooser fileStore = new JFileChooser();
+               fileStore.setFileSelectionMode(JFileChooser.APPROVE_OPTION);
+               fileStore.setMultiSelectionEnabled(false);
+
+               int val = fileStore.showSaveDialog(null);
+
+               if(val == JFileChooser.APPROVE_OPTION){
+
+                  //select where to store the new file
+                  File f = fileStore.getSelectedFile();
+                  String path = f.getAbsolutePath();
+                  
+                  //try and catch
+                  try(PrintWriter out = new PrintWriter(f)){
+
+                     //get the size of the original board
+                     int size = GUI.returnSize();
+                     //get the size of the updated board as the user interacts with it
+                     int updatedBoardSize = grid.returnUpdateBoard();
+
+                     //loop through the original board and print out info
+                     for(int i = 0; i < size; i++){
+
+                        if(i % 3 == 0 && i != 0){
+                           out.println();
+                        }
+                        out.println(GUI.returnCoords(i));
+
+                     }
+
+                     //loop through the updated board and print out info
+                     for(int x = 0; x < updatedBoardSize; x++){
+                        if(x % 3 == 0 && x != 0){
+                           out.println();
+                        }
+
+                        out.println(grid.returnCoordsForUB(x));
+                     }
+                    
+                  
+               }
+
+                  catch(FileNotFoundException x){
+
+                     System.out.println("ERROR");
+
+                  }
+
+               }
+
+
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
@@ -133,8 +185,9 @@
          public void actionPerformed( ActionEvent event )
          {
             JOptionPane.showMessageDialog( MenuClass.this,
-               "This is how to play Sudoku: ",
-               "Sudoku Rules", JOptionPane.PLAIN_MESSAGE );
+                "Fill a number in to every cell in the grid, using the numbers 1 to 9\n" +
+                          "You can only use each number once in each row, each column, and in each of the 3×3 boxes",
+                  "Sudoku Rules", JOptionPane.PLAIN_MESSAGE );
          }
         }  // end anonymous inner class
       ); // end call to addActionListener
@@ -151,7 +204,20 @@
             public void actionPerformed( ActionEvent event )
             {
                JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is how to use ther Interface ",
+                                 "You click on one of the buttons on the side panel (1-9 or X)and then you click on one" +
+                          " of the buttons where you would like that number to go(in one of the 3x3 boxes)\n" +
+                          "File: \n" +
+                          "     -Load Puzzle, Allow the user to Load the puzzle,\n" +
+                          "     -Store Puzzle, store the puzzle\n" +
+                          "     -Exit- Exits the game\n" +
+                          "Help: \n" +
+                          "     -Sudoku Rules, Lists the rules of the Sudoku game\n" +
+                          "     -Interface how to-  use the program,\n" +
+                          "     -About,  Lists names of authors & netid's\n" +
+                          "Hint:\n" +
+                          "     -Check-fill which fills in as many blank cells as possible\n" +
+                          "     -Four different algorithms- to help out the player(single, hidden single etc)\n" +
+                          "     -Fill-all, fills in a many blank cells as possible using all four algorithms",
                   "Interface How To", JOptionPane.PLAIN_MESSAGE );
             }
          }  // end anonymous inner class
@@ -186,17 +252,22 @@
       {
 
       // check-fill sub-menu is a check box that will give the user an error if number they
-      // attempted to inser is not in the candidate list for that cell
-         JMenuItem check = new JMenuItem( "Check-fill" );
+      // attempted to inser tis not in the candidate list for that cell
+         JCheckBoxMenuItem check = new JCheckBoxMenuItem( "Check-fill" );
          hintMenu.add( check );
          check.addActionListener(
             new ActionListener() 
          {  // anonymous inner class
             public void actionPerformed( ActionEvent event )
             {
-               JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is to check if it is fill ",
-                  "Check-fill", JOptionPane.PLAIN_MESSAGE );
+               if(check.getState())
+               {
+                  grid.setAllowed(true);
+               }
+               else
+               {
+                  grid.setAllowed(false);
+               }
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
@@ -210,9 +281,13 @@
             // display message dialog when user selects About...
             public void actionPerformed( ActionEvent event )
             {
-               JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is for the Single Algorithm ",
-                  "Single Algorithm", JOptionPane.PLAIN_MESSAGE );
+               algo.SingleAlgorithm();
+               if(grid.checkFinish())
+               {
+                  JOptionPane.showMessageDialog( null,
+                  "Congratulations on completing the puzzle!",
+                  "Congrats", JOptionPane.PLAIN_MESSAGE );
+               }               
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
@@ -227,9 +302,13 @@
             //run hidden-single algorithm
             public void actionPerformed( ActionEvent event )
             {
-               JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is for the hidden single Algorithm",
-                  "hSingleAlgo", JOptionPane.PLAIN_MESSAGE );
+               algo.HiddenSingleAlgorithm();
+               if(grid.checkFinish())
+               {
+                  JOptionPane.showMessageDialog( null,
+                  "Congratulations on completing the puzzle!",
+                  "Congrats", JOptionPane.PLAIN_MESSAGE );
+               }
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
@@ -245,9 +324,7 @@
             // run locked candidate algorithm
             public void actionPerformed( ActionEvent event )
             {
-               JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is for the Locked Candidate Algorithm",
-                  "LCanditateAlgo", JOptionPane.PLAIN_MESSAGE );
+               algo.LockedCandidateAlgorithm();
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
