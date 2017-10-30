@@ -18,7 +18,7 @@ public class Algorithms
 		cand = new Candidate(refGrid);
 	}
 
-	public void SingleAlgorithm()
+	public boolean SingleAlgorithm()
 	{
 		// created variables
 		boolean flag = false;
@@ -60,10 +60,11 @@ public class Algorithms
 			cand.removeCandidate(Integer.toString(v.get(0)), chosenCell.getCellSection(), chosenCell);
 		}
 		
+		return flag;
 	}
 
 	// hidden single algorithm
-	public void HiddenSingleAlgorithm()
+	public boolean HiddenSingleAlgorithm()
 	{
 		boolean flag = false;
 		buttonClass chosenCell = null;
@@ -116,14 +117,17 @@ public class Algorithms
 			cand.removeCandidate(Integer.toString(ChosenCandidate), chosenCell.getCellSection(), chosenCell);
 		}
 
+		return flag;
 	}
+	
 
 	// locked candidate algorithm
-	public void LockedCandidateAlgorithm()
+	public boolean LockedCandidateAlgorithm()
 	{
 		// 3 vectors that will hold sets of data pertaining to the cadidate lists for each
 		// subgrid
-
+		boolean flag = false;
+		
 		for(int i = 0; i < 9; i++)
 		{
 			//for horizontal locked candidates
@@ -172,11 +176,14 @@ public class Algorithms
 
 			// delete candidates
 			if(groupedVec.size() != 0)
-			{
+			{	
+				flag = true;
 				findAndDeleteCandidateRow(box1, box2, originBox, groupedVec);
 				break;
 			}
 		}
+		
+		return flag;
 	}
 
 

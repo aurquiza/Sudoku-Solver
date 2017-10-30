@@ -346,7 +346,7 @@
       ); // end call to addActionListener
 
 
-       // fill all algorithm
+       // fill all algorithm, has bug hopefully it works.... sorry 
          JMenuItem fillAll = new JMenuItem( "Fill All" );
          hintMenu.add( fillAll );
          fillAll.addActionListener(
@@ -355,9 +355,28 @@
             // display message dialog when user selects About...
             public void actionPerformed( ActionEvent event )
             {
-               JOptionPane.showMessageDialog( MenuClass.this,
-                  "This is for filling all four algorithms ",
-                  "Fill All", JOptionPane.PLAIN_MESSAGE );
+              
+               	  boolean flag1 = true;
+               	  boolean flag2 = true;
+               	  boolean flag3 = true;
+               	  
+               	  while(flag1 || flag2 || flag3)
+               	  {
+               		  flag1 = algo.SingleAlgorithm();
+               		  flag2 = algo.HiddenSingleAlgorithm();
+               		  flag3 = algo.LockedCandidateAlgorithm();
+               		  
+               		  
+               	  }	
+               	  
+               	  if(grid.checkFinish())
+               	  {
+               		  JOptionPane.showMessageDialog( null,
+               				  "Congratulations on completing the puzzle!",
+               				  "Congrats", JOptionPane.PLAIN_MESSAGE );
+               	  }             
+       
+               	  
             }
          }  // end anonymous inner class
       ); // end call to addActionListener
